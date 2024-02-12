@@ -8,7 +8,7 @@ import { findUserByEmail, createUser } from "@/firebase/repositories/UserReposit
  * Controller que será executada quando um POST na rota /api/cadastro for executado
  */
 
-export async function POST(request: NextRequest, response: NextResponse) {
+export async function POST(request: NextRequest) {
     const { email, name, password} = await request.json();
 
     // Verifica se o usuário já existe
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
 
     const newUser = await createUser({ email, name, password: hashedPassword });
 
-    const accessToken = jwt.sign({ id: newUser.id, email: newUser.email, name: newUser.name }, process.env.JWT_SECRET!, {
+    const accessToken = jwt.sign({ id: newUser.id, email: email, name: name }, process.env.TOKEN_SECRET!, {
          expiresIn: "10h",
     });
 
